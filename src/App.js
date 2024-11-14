@@ -1,8 +1,8 @@
 import { Oval } from 'react-loader-spinner';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFrown } from '@fortawesome/free-solid-svg-icons';
+import { faFrown, faStar } from '@fortawesome/free-solid-svg-icons';
 import './App.css';
 
 function Grp204WeatherApp() {
@@ -13,6 +13,13 @@ function Grp204WeatherApp() {
     forecast: [],
     error: false,
   });
+  const [favorites, setFavorites] = useState([]);
+
+  useEffect(() => {
+    // Load favorite cities from localStorage on mount
+    const savedFavorites = JSON.parse(localStorage.getItem('favoriteCities')) || [];
+    setFavorites(savedFavorites);
+  }, []);
 
   const toDateFunction = () => {
     const months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août',
@@ -26,39 +33,53 @@ function Grp204WeatherApp() {
   const search = async (event) => {
     if (event.key === 'Enter') {
       event.preventDefault();
-      setInput('');
-      setWeather({ ...weather, loading: true });
-
-      const api_key = 'f00c38e0279b7bc85480c3fe775d518c';
-      const currentWeatherUrl = 'https://api.openweathermap.org/data/2.5/weather';
-      const forecastUrl = 'https://api.openweathermap.org/data/2.5/forecast';
-
-      try {
-        const [currentWeatherRes, forecastRes] = await Promise.all([
-          axios.get(currentWeatherUrl, {
-            params: { q: input, units: 'metric', appid: api_key },
-          }),
-          axios.get(forecastUrl, {
-            params: { q: input, units: 'metric', appid: api_key },
-          })
-        ]);
-
-        setWeather({
-          data: currentWeatherRes.data,
-          forecast: forecastRes.data.list.filter((_, index) => index % 8 === 0), // Select daily data points
-          loading: false,
-          error: false,
-        });
-      } catch (error) {
-        setWeather({ ...weather, data: {}, forecast: [], error: true });
-        setInput('');
-      }
+      fetchWeather(input);
     }
+  };
+
+  const fetchWeather = async (city) => {
+    setInput('');
+    setWeather({ ...weather, loading: true });
+    const api_key = 'f00c38e0279b7bc85480c3fe775d518c';
+    const currentWeatherUrl = 'https://api.openweathermap.org/data/2.5/weather';
+    const forecastUrl = 'https://api.openweathermap.org/data/2.5/forecast';
+
+    try {
+      const [currentWeatherRes, forecastRes] = await Promise.all([
+        axios.get(currentWeatherUrl, { params: { q: city, units: 'metric', appid: api_key } }),
+        axios.get(forecastUrl, { params: { q: city, units: 'metric', appid: api_key } })
+      ]);
+
+      setWeather({
+        data: currentWeatherRes.data,
+        forecast: forecastRes.data.list.filter((_, index) => index % 8 === 0),
+        loading: false,
+        error: false,
+      });
+    } catch (error) {
+      setWeather({ ...weather, data: {}, forecast: [], error: true });
+    }
+  };
+
+  const addFavorite = () => {
+    if (!favorites.includes(input)) {
+      const updatedFavorites = [...favorites, input];
+      setFavorites(updatedFavorites);
+      localStorage.setItem('favoriteCities', JSON.stringify(updatedFavorites));
+      setInput('');
+    }
+  };
+
+  const removeFavorite = (city) => {
+    const updatedFavorites = favorites.filter(fav => fav !== city);
+    setFavorites(updatedFavorites);
+    localStorage.setItem('favoriteCities', JSON.stringify(updatedFavorites));
   };
 
   return (
     <div className="App">
       <h1 className="app-name">Application Météo grp204</h1>
+
       <div className="search-bar">
         <input
           type="text"
@@ -69,6 +90,19 @@ function Grp204WeatherApp() {
           onChange={(event) => setInput(event.target.value)}
           onKeyPress={search}
         />
+        <button onClick={addFavorite} className="favorite-btn">
+          <FontAwesomeIcon icon={faStar} /> Ajouter aux Favoris
+        </button>
+      </div>
+
+      <div className="favorites-list">
+        <h3>Villes Favoris</h3>
+        {favorites.map((city, index) => (
+          <div key={index} className="favorite-item">
+            <span onClick={() => fetchWeather(city)}>{city}</span>
+            <button onClick={() => removeFavorite(city)}>Supprimer</button>
+          </div>
+        ))}
       </div>
 
       {weather.loading && (
