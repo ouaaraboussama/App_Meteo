@@ -1,3 +1,209 @@
-*{
-    background-color: red;
-}
+:root{
+    --backGroundColor:#f9fafb;
+    --color:black;
+    --secondaryColor:gray;
+    --boxShadow: 0 4px 6px  rgba(0,0,0,0.1);
+    --backgroundcardColor:#ffffff;
+    --backgroundlistActive:#fafafa;
+    --backgroundlistHover:#f3f4f6;
+    --backgroundButton:#3b82f6;
+    --backgroundButtonHover:#2563eb;
+    --colorTitleCard: #9ca3af;
+  }
+  .dark-mode{
+    --backGroundColor:#20232a;
+    --color:#ffffff;
+    --secondaryColor:#b0b3b8;
+    --boxShadow: 0px 4px 6px  rgba(0,0,0,0.5);
+    --backgroundcardColor:#282c34   ;
+    --backgroundlistActive:#3a3f4b;
+    --backgroundlistHover:#4a4f5c;
+    --backgroundButton:#61dafb;
+    --backgroundButtonHover:#51c8e9;
+    --colorTitleCard: #b0b3b8;
+  }
+  
+  .App{
+    padding: 10px 30px;
+    background-color: var(--backGroundColor);
+    color: var(--color);
+    min-height: 100vh;
+    transition: background-color 1s ease ,color 1s ease;
+  }
+  .app-name{
+    text-align: center;
+  }
+  .search-bar{
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 20px;
+  }
+  .city-search{
+    width: 600px;
+    height: 30px;
+    border-radius: 10px;
+    padding-left: 12px;
+    outline: none;
+    border: 2px solid gray;
+  }
+  .notification{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--backgroundcardColor);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 230px;
+    min-height: 151px;
+    border-radius: 15px;
+    box-shadow: var(--boxShadow);
+    transition: background-color 1s ease , box-shadow 0,5 ease;
+  }
+  .error-message >button{
+    background-color: var(--backgroundButton);
+    border: 0px solid black;
+    border-radius: 6px;
+    position: relative;
+    left: 50%;
+    translate: -50% 0;
+    margin-top: 20px;
+    padding: 7px 20px;
+    cursor: pointer;
+    transition: background-color 1s ease;
+  }
+  .weather-info{
+    flex-basis: 72%;
+  }
+  .contniner-fawi{
+    display: flex;
+    justify-content: space-between;
+  }
+  .parent-sai{
+    display: flex;
+    border-radius: 15px;
+    box-shadow: var(--boxShadow);
+  
+  }
+  .info-status{
+    flex-basis: 60%;
+    padding: 15px 30px;
+    position: relative;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    background-color: var(--backgroundcardColor);
+    transition: background-color 1s ease;
+  }
+  .btn-add-favorite{
+    position: absolute;
+    top: 27px;
+    left: 410px;
+    background-color: var(--backgroundButton);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 1s ease;
+  }
+  .btn-add-favorite:hover{
+    scale: 1.03;
+  }
+  .info-status h2{
+    margin: 0;
+    font-size: 35px;
+  }
+  div.info-status > span{
+    margin-left: 20px;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  div.info-status > p:nth-child(3){
+    font-size: 45px;
+    margin: 15px 0;
+    margin-left: 50px;
+    font-weight: 600;
+  }
+  div.weather-info > div > div.info-status > p:nth-child(4){
+    font-size: 16px;
+    margin-left: 20px;
+    font-weight: 400;
+  }
+  .info-img{
+    flex-basis: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    background-color: var(--backgroundcardColor);
+    transition: background-color 1s ease;
+  }
+  .info-img img{
+    width: 200px;
+  }
+  .favorites-list {
+    flex-basis: 25.5%;
+    padding: 5px 10px;
+    height: 190px;
+    overflow-y: auto;
+    border-radius: 15px;
+    background-color: var(--backgroundcardColor);
+    box-shadow: var(--boxShadow);
+    transition: background-color 1s ease;
+  }
+  .favorite-item > div{
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--backgroundlistActive);
+    padding: 5px 20px;
+    border-radius: 7px;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+  .favorite-item > div:hover{
+    scale: 1.01;
+    background-color: var(--backgroundlistHover);
+  }
+  .favorites-list h3{
+    padding: 0;
+    color: var(--colorTitleCard);
+  }
+  .forecast-cards{
+    display: flex;
+    justify-content: space-between;
+  }
+  .forecast-card{
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+  }
+  .forecast-card:hover{
+    scale: 1.05;
+    background-color: var(--backgroundlistActive);
+    box-shadow: var(--cardShadow);
+    border-radius: 10px;
+  
+  }
+  .forecast-card img{
+    width: 130px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .forecast-card span, .forecast-card p{
+    text-align: center;
+  }
+  .forecast-section{
+    margin-top: 25px;
+    border-radius: 10px;
+    padding: 15px;
+    background-color: var(--backgroundcardColor);
+    box-shadow: var(--boxShadow);
+    transition: background-color 1s ease;
+  }
+  .forecast-section >h3{
+    color:var(--colorTitleCard);
+  }
