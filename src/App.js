@@ -16,6 +16,53 @@ function Grp204WeatherApp() {
     
   });
   const [favorites, setFavorites] = useState([]);
+  const [location, setLocation] = useState(null);
+
+useEffect(() => {
+  // Detect user's location on app load
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setLocation({ latitude, longitude });
+        fetchWeatherByCoordinates(latitude, longitude); // Automatically fetch weather for the detected location
+      },
+      (error) => {
+        console.error("Error detecting location:", error);
+      }
+    );
+  } else {
+    console.error("Geolocation is not supported by this browser.");
+  }
+}, []);
+
+const fetchWeatherByCoordinates = async (latitude, longitude) => {
+  setWeather({ ...weather, loading: true });
+  const api_key = 'f00c38e0279b7bc85480c3fe775d518c';
+  const currentWeatherUrl = 'https://api.openweathermap.org/data/2.5/weather';
+  const forecastUrl = 'https://api.openweathermap.org/data/2.5/forecast';
+
+  try {
+    const [currentWeatherRes, forecastRes] = await Promise.all([
+      axios.get(currentWeatherUrl, {
+        params: { lat: latitude, lon: longitude, units: 'metric', appid: api_key },
+      }),
+      axios.get(forecastUrl, {
+        params: { lat: latitude, lon: longitude, units: 'metric', appid: api_key },
+      }),
+    ]);
+
+    setWeather({
+      data: currentWeatherRes.data,
+      forecast: forecastRes.data.list.filter((_, index) => index % 8 === 0),
+      loading: false,
+      error: false,
+    });
+  } catch (error) {
+    setWeather({ ...weather, data: {}, forecast: [], error: true });
+  }
+};
+
 
   useEffect(() => {
     // Load favorite cities from localStorage on mount
